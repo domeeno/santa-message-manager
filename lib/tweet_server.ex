@@ -9,12 +9,12 @@ defmodule TweetServer do
     {:ok, %{}}
   end
 
-  def handle_cast({:tweet, _tweet}, _) do
-    TweetProcess.testing_this_shit_bro()
+  def handle_cast({:tweet, tweet}, _) do
+    TweetProcess.testing_this_shit_bro(tweet)
     {:noreply, %{}}
   end
 
-  def test() do
-    TweetProcess.testing_this_shit_bro()
+  def test(:tweet, tweet) do
+    TweetProcess.testing_this_shit_bro(tweet)
   end
 end
