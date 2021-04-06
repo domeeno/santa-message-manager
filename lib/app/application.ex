@@ -1,8 +1,8 @@
 defmodule App.Application do
   def start(_type, _args) do
     children = [
-      TweetServer,
-      %{id: TweetReader, start: {TweetReader, :start_link, []}}
+      Tweet.TweetServer,
+      %{id: Tweet.TweetReader, start: {Tweet.TweetReader, :start_link, []}}
     ]
 
     opts = [strategy: :one_for_one, name: App.Supervisor]
