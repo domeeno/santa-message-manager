@@ -1,12 +1,12 @@
 defmodule SantaSupervisor do
   use DynamicSupervisor
 
-  def start_link() do
-    IO.puts("SantaSupervisor starting")
-    what = DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
-    SantaSupervisor.start_child(5)
-    IO.puts("SantaSupervisor started")
-    what
+  def start_link(n) do
+    IO.puts("Supervisor starting with " <> Integer.to_string(n) <> " workers...")
+    supervisor = DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
+    SantaSupervisor.start_child(n)
+    IO.puts("Supervisor started with " <> Integer.to_string(SantaSupervisor.get_count) <> " workers")
+    supervisor
   end
 
   def get_count() do
@@ -15,13 +15,14 @@ defmodule SantaSupervisor do
   end
 
   def kill_child(n) do
-    IO.puts("terminating worker")
     i = SantaSupervisor.get_count() - 1
-
-    [{_, pid}] = Registry.lookup(Registry.ViaTest, "elf_worker" <> Integer.to_string(i))
+    # IO.puts("terminating worker: " <> "elf_worker" <> Integer.to_string(i))
+    all = Registry.lookup(Registry.ViaTest, "elf_worker" <> Integer.to_string(i))
+    one = Enum.at(all, -1)
+    {_, pid} = one
 
     DynamicSupervisor.terminate_child(__MODULE__, pid)
-    if n != 1 do
+    if n > 0 do
       kill_child(n - 1)
     end
   end
@@ -40,16 +41,6 @@ defmodule SantaSupervisor do
     end
   end
 
-  @impl true
-  @spec init(:ok) ::
-          {:ok,
-           %{
-             extra_arguments: list,
-             intensity: non_neg_integer,
-             max_children: :infinity | non_neg_integer,
-             period: pos_integer,
-             strategy: :one_for_one
-           }}
   def init(:ok) do
     DynamicSupervisor.init(
       strategy: :one_for_one,

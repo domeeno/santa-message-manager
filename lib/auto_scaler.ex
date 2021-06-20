@@ -1,19 +1,20 @@
 defmodule AutoScaler do
   use GenServer
+  @seconds 2000
 
   def start_link() do
     IO.puts("AutoScaler starting")
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+    scaler = GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
     IO.puts("AutoScaler started")
+    scaler
   end
 
   def init(_state) do
-    scale_timer()
+    timer()
     {:ok, %{counter: 0}}
   end
 
   def handle_cast({:count, _}, state) do
-    IO.puts("wtf")
     {:noreply, %{counter: state.counter + 1}}
   end
 
@@ -30,9 +31,15 @@ defmodule AutoScaler do
   end
 
 
-  def scale(:scale, state) do
-    workplaces = div(state.counter, 15) + 1
+  defp timer() do
+    Process.send_after(self(), :scale, @seconds)
+  end
+
+  def handle_info(:scale, state) do
+    workplaces = div(state.counter, 10)
     elves = SantaSupervisor.get_count()
+
+    # IO.puts("Workers: " <> Integer.to_string(elves) <> ",\t Counter:" <>  Integer.to_string(state.counter))
 
     if workplaces > elves do
       hire_elves(abs(workplaces - elves))
@@ -42,11 +49,8 @@ defmodule AutoScaler do
       fire_elves(abs(workplaces - elves))
     end
 
-    scale_timer()
+    timer()
     {:noreply, %{counter: 0}}
   end
 
-  defp scale_timer() do
-    Process.send_after(self(), :scale, 1000)
-  end
 end

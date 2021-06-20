@@ -27,7 +27,8 @@ defmodule MessageProcessing.MixProject do
       # SSE SERVER READER
       {:eventsource_ex, "~> 0.0.2"},
       # JSON READER
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:mongodb, "~> 0.5.1"}
     ]
   end
 end

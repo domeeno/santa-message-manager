@@ -8,8 +8,7 @@ defmodule TweetReader do
   def send_message() do
     receive do
       message ->
-        AutoScaler.count_message(:count)
-        TweetServer.test(:message, message)
+        TweetRouter.consume(:message, message)
     end
 
     send_message()

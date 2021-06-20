@@ -9,6 +9,6 @@ defmodule TweetProcess do
         sentiment = words
         |> Enum.reduce(0, fn word, acc -> Sentiments.get_value(word) + acc end)
         |> Kernel./(length(words))
-        IO.puts(sentiment)
+        sentiment
   end
 end
