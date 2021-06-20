@@ -1,6 +1,6 @@
 # MessageProcessing
 
-**TODO: Add description**
+## TO RUN EXECUTE `iex -S mix` 
 
 ## Installation
 
