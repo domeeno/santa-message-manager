@@ -1,13 +1,14 @@
 defmodule TweetReader do
-  def start_link do
-    IO.puts("Oki Doki")
+  def start_link(connection_url) do
+    IO.puts("Started receiving on " <> connection_url)
 
-    {:ok, _pid} = EventsourceEx.new("http://localhost:4000/tweets/1", stream_to: spawn_link(__MODULE__, :send_message, []))
+    {:ok, _pid} = EventsourceEx.new(connection_url, stream_to: spawn_link(__MODULE__, :send_message, []))
   end
 
   def send_message() do
     receive do
       message ->
+        AutoScaler.count_message(:count)
         TweetServer.test(:message, message)
     end
 

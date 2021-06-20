@@ -2,19 +2,25 @@ defmodule TweetServer do
   use GenServer
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, :ok, name: :message_server)
+    # IO.puts("TwitterServer starting")
+    GenServer.start_link(__MODULE__, :ok, name: :tweet_server)
+    # IO.puts("TwitterServer started")
   end
 
   def init(:ok) do
     {:ok, %{}}
   end
 
-  def handle_cast({:message, message}, _) do
-    TweetProcess.testing_this_shit_bro(message)
+
+  def test(:message, message) do
+    IO.puts("ok")
+    GenServer.cast(__MODULE__ , {:tweet, message})
+  end
+
+  def handle_cast({:tweet, _message}, _state) do
+    IO.puts("wtf cast" <> "")
+    # ElfWorker.process(message)
     {:noreply, %{}}
   end
 
-  def test(:message, message) do
-    TweetProcess.testing_this_shit_bro(message)
-  end
 end
