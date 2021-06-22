@@ -28,7 +28,9 @@ defmodule MessageProcessing.MixProject do
       {:eventsource_ex, "~> 0.0.2"},
       # JSON READER
       {:poison, "~> 3.1"},
-      {:mongodb, "~> 0.5.1"}
+      # MONGO CONNECTION
+      {:mongodb, "~> 0.5.1"},
+
     ]
   end
 end

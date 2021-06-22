@@ -1,6 +1,7 @@
 defmodule App.Application do
   def start(_type, _args) do
     children = [
+      %{id: Mongo.Conn, start: {Mongo.Conn, :start_link, ["mongodb://localhost:27017/sentimentdb"]}},
       %{id: Registry, start: {Registry, :start_link, [:duplicate, Registry.ViaTest]}},
       Router.TweetRouter,
       %{id: Supervisor.Dynamic.SantaSupervisor, start: {Supervisor.Dynamic.SantaSupervisor, :start_link, [5]}},
