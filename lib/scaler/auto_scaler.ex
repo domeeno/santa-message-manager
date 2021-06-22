@@ -1,4 +1,4 @@
-defmodule AutoScaler do
+defmodule Scaler.AutoScaler do
   use GenServer
   @seconds 2000
 
@@ -23,11 +23,11 @@ defmodule AutoScaler do
   end
 
   def hire_elves(n) do
-    SantaSupervisor.start_child(n)
+    Supervisor.Dynamic.SantaSupervisor.start_child(n)
   end
 
   def fire_elves(n) do
-    SantaSupervisor.kill_child(n)
+    Supervisor.Dynamic.SantaSupervisor.kill_child(n)
   end
 
 
@@ -37,7 +37,7 @@ defmodule AutoScaler do
 
   def handle_info(:scale, state) do
     workplaces = div(state.counter, 10)
-    elves = SantaSupervisor.get_count()
+    elves = Supervisor.Dynamic.SantaSupervisor.get_count()
 
     # IO.puts("Workers: " <> Integer.to_string(elves) <> ",\t Counter:" <>  Integer.to_string(state.counter))
 

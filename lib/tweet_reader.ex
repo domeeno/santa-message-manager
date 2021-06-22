@@ -8,7 +8,7 @@ defmodule TweetReader do
   def send_message() do
     receive do
       message ->
-        TweetRouter.consume(:message, message)
+        Router.TweetRouter.consume(:message, message)
     end
 
     send_message()

@@ -1,4 +1,4 @@
-defmodule TweetProcess do
+defmodule Utils.TweetProcess do
   def eval(message) do
     {:ok, json_tweet} = Poison.decode(message.data)
     tweet = json_tweet["message"]["tweet"]["text"]

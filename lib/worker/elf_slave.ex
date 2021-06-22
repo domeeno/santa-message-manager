@@ -1,4 +1,4 @@
-defmodule ElfWorker do
+defmodule Worker.ElfWorker do
   use GenServer
 
   def start_link(args) do
@@ -15,9 +15,8 @@ defmodule ElfWorker do
   end
 
   def handle_cast({:eval, message, index, worker_count}, _state) do
-    sentiment_q =  TweetProcess.eval(message)
+    sentiment_q =  Utils.TweetProcess.eval(message)
     IO.puts("worker: " <> Integer.to_string(index) <> ":\t sentiment: " <> Float.to_string(sentiment_q) <> ":\t workers count: " <> Integer.to_string(worker_count))
     {:noreply, %{}}
   end
-
 end

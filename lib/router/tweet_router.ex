@@ -1,4 +1,4 @@
-defmodule TweetRouter do
+defmodule Router.TweetRouter do
   use GenServer
 
   def start_link(_) do
@@ -25,16 +25,16 @@ defmodule TweetRouter do
   end
 
   def handle_cast({:route, message}, state) do
-    AutoScaler.count_message(:count)
+    Scaler.AutoScaler.count_message(:count)
     assign_work(message, state.index)
 
-    new_index = get_index(state.index > SantaSupervisor.get_count() - 1, state.index)
+    new_index = get_index(state.index > Supervisor.Dynamic.SantaSupervisor.get_count() - 1, state.index)
 
     {:noreply, %{index: new_index}}
   end
 
   def assign_work(message, index) do
     result = String.to_atom("elf_worker" <> Integer.to_string(index))
-    GenServer.cast(result, {:eval, message, index, SantaSupervisor.get_count})
+    GenServer.cast(result, {:eval, message, index, Supervisor.Dynamic.SantaSupervisor.get_count})
   end
 end
