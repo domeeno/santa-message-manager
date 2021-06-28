@@ -1,7 +1,5 @@
 defmodule Utils.ServerTCP do
   def start_link(host, port) do
-    IO.puts(host)
-    IO.puts(port)
     :gen_tcp.connect(host, port, [:binary, active: false])
   end
 

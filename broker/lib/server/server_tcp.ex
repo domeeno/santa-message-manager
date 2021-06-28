@@ -10,9 +10,7 @@ defmodule Server.ServerTCP do
     # 3. `active: false` - blocks on `:gen_tcp.recv/2` until data is available
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener crashes
     #
-    IO.puts(port)
-    {:ok, socket} =
-      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+    {:ok, socket} = :gen_tcp.listen(port, [:binary, active: false, reuseaddr: true])
 
     Logger.info("Accepting connections on port #{port}")
     loop_acceptor(socket)
@@ -24,26 +22,33 @@ defmodule Server.ServerTCP do
 
   defp loop_acceptor(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
-    {:ok, pid} = Task.Supervisor.start_child(ServerTCP.TaskSupervisor, fn -> serve(client) end)
+    pid = spawn_link(__MODULE__, :serve, [client])
     :ok = :gen_tcp.controlling_process(client, pid)
     loop_acceptor(socket)
   end
 
-  defp serve(socket) do
+  def serve(:error, _client) do
+  end
+
+  def serve(socket) do
     socket
     |> read_line()
-    |> write_line(socket)
+
+    # |> write_line(socket)
 
     serve(socket)
   end
 
   defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    Logger.info(data)
-    data
+    try do
+      {:ok, data} = :gen_tcp.recv(socket, 0)
+      Logger.info(data)
+    rescue
+      _ -> :error
+    end
   end
 
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
-  end
+  # defp write_line(line, socket) do
+  #   :gen_tcp.send(socket, line)
+  # end
 end
