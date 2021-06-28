@@ -1,11 +1,11 @@
-defmodule MessageBroker.MixProject do
+defmodule MessageProcessing.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :message_broker,
+      app: :message_processing,
       version: "0.1.0",
-      elixir: "~> 1.12",
+      elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -15,7 +15,7 @@ defmodule MessageBroker.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {MessageBroker.Application, []}
+      mod: {App.Application, []}
     ]
   end
 
@@ -24,6 +24,13 @@ defmodule MessageBroker.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      # SSE SERVER READER
+      {:eventsource_ex, "~> 0.0.2"},
+      # JSON READER
+      {:poison, "~> 3.1"},
+      # MONGO CONNECTION
+      {:mongodb, "~> 0.5.1"},
+
     ]
   end
 end
