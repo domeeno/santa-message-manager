@@ -1,6 +1,16 @@
 # MessageProcessing
 
-## TO RUN EXECUTE `iex -S mix` 
+##### TO BUILD DOCKER EXECUTE: `docker-compose up` 
+##### Subscribe to topics with telnet: `telnet 127.0.0.1 8000`
+##### Possible topics: negative, neutral, positive
+
+```
+telnet 127.0.0.1 8000
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+neutral # this is the topic you want to subscribe to.
+```
 
 ## Installation
 
