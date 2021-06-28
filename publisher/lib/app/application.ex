@@ -3,11 +3,9 @@ defmodule App.Application do
     children = [
       # %{id: Mongo.Conn, start: {Mongo.Conn, :start_link, ["mongodb://localhost:27017/sentimentdb"]}},
       # %{id: Mongo.UploadServer, start: {Mongo.UploadServer, :start_link, []}},
-      # TCP SERVER
-      # {Task.Supervisor, name: ServerTCP.TaskSupervisor},
-      # Supervisor.child_spec({Task, fn -> Utils.ServerTCP.start_link('127.0.0.1', 4040) end}, restart: :permanent),
-      {Task, fn -> Utils.ServerTCP.start_link('127.0.0.1', 4040) end},
+
       # MODULES
+      %{id: Worker.BrokerLink, start: {Worker.BrokerLink, :start_link, ['127.0.0.1', 4040]}},
       %{id: Registry, start: {Registry, :start_link, [:duplicate, Registry.ViaTest]}},
       Router.TweetRouter,
       %{id: Supervisor.Dynamic.SantaSupervisor, start: {Supervisor.Dynamic.SantaSupervisor, :start_link, [5]}},
