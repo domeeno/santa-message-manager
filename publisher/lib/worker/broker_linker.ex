@@ -3,7 +3,7 @@ defmodule Worker.BrokerLink do
 
   def start_link(host, port) do
 
-    IO.puts("Establishing broker link on: 127.0.0.1:" <> Integer.to_string(port))
+    IO.puts("Establishing broker link on: " <> Integer.to_string(port))
     {:ok, socket} = Utils.ServerTCP.start_link(host, port)
     broker = GenServer.start_link(__MODULE__, %{socket: socket}, name: __MODULE__)
     IO.puts("Broker link established")

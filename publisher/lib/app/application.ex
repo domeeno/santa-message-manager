@@ -5,12 +5,12 @@ defmodule App.Application do
       # %{id: Mongo.UploadServer, start: {Mongo.UploadServer, :start_link, []}},
 
       # MODULES
-      %{id: Worker.BrokerLink, start: {Worker.BrokerLink, :start_link, ['127.0.0.1', 4040]}},
+      %{id: Worker.BrokerLink, start: {Worker.BrokerLink, :start_link, ['broker', 4040]}},
       %{id: Registry, start: {Registry, :start_link, [:duplicate, Registry.ViaTest]}},
       Router.TweetRouter,
       %{id: Supervisor.Dynamic.SantaSupervisor, start: {Supervisor.Dynamic.SantaSupervisor, :start_link, [5]}},
       %{id: Scaler.AutoScaler, start: {Scaler.AutoScaler, :start_link, []}},
-      %{id: TweetReader, start: {TweetReader, :start_link, ["http://localhost:4000/tweets/2"]}},
+      %{id: TweetReader, start: {TweetReader, :start_link, ["server:4000/tweets/2"]}},
     ]
 
     opts = [strategy: :one_for_one, name: App.Supervisor]
