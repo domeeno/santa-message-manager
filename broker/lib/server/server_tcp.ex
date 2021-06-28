@@ -35,7 +35,6 @@ defmodule Server.ServerTCP do
     socket
     |> read_line()
 
-    # |> write_line(socket)
 
     serve(socket)
   end
@@ -50,7 +49,4 @@ defmodule Server.ServerTCP do
     end
   end
 
-  # defp write_line(line, socket) do
-  #   :gen_tcp.send(socket, line)
-  # end
 end

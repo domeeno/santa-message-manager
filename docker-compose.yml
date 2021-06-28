@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+
+    server:
+        image : alexburlacu/rtp-server:faf18x
+        container_name: server
+
+    broker:
+        build:
+            context: broker
+        ports:
+            - 8082:8082
+        cap_add:
+            - NET_ADMIN
+
+
+    publisher:
+        build: 
+            context: publisher
+        restart: always
+
+        depends_on:
+            - broker
+        cap_add:
+            - NET_ADMIN
