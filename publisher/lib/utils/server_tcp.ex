@@ -9,7 +9,7 @@ defmodule Utils.ServerTCP do
       |> Integer.to_string()
       |> String.pad_leading(5, "0")
 
-    packet = %{"topic" => polarity, "tweet" => size <> data}
+    packet = %{"topic" => polarity, "tweet" => data}
 
     :gen_tcp.send(socket, Poison.encode!(packet))
   end

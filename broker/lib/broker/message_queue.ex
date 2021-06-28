@@ -47,19 +47,51 @@ defmodule Broker.MessageQueue do
   # FEEDERS
   # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-  def handle_cast({:feednegative, }, state) do
-    state.negative[0]
-    {:noreply, %{negative: List.delete_at(state.negative, 0), neutral: state.neutral, positive: state.positive}}
+  def handle_cast({:feednegative, socket}, state) do
+    not_empty = length(state.negative) > 0
+    result = get_message(not_empty, state.negative)
+    list = handle_list(not_empty, state.negative)
+
+    Server.SubscriberServer.send_message(socket, result)
+
+    {:noreply, %{negative: list, neutral: state.neutral, positive: state.positive}}
   end
 
-  def handle_cast({:feedneutral, }, state) do
-    state.neutral[0]
-    {:noreply, %{negative: state.negative, neutral: List.delete_at(state.neutral, 0), positive: state.positive}}
+  def handle_cast({:feedneutral, socket}, state) do
+    not_empty = length(state.neutral) > 0
+    result = get_message(not_empty, state.neutral)
+    list = handle_list(not_empty, state.neutral)
+
+    Server.SubscriberServer.send_message(socket, result)
+
+    {:noreply, %{negative: state.negative, neutral: list, positive: state.positive}}
   end
 
-  def handle_cast({:feedpositive }, state) do
-    state.positive[0]
-    {:noreply, %{negative: state.negative, neutral: state.neutral, positive: List.delete_at(state.positive, 0)}}
+  def handle_cast({:feedpositive, socket}, state) do
+    not_empty = length(state.positive) > 0
+    result = get_message(not_empty, state.positive)
+    list = handle_list(not_empty, state.positive)
+
+    Server.SubscriberServer.send_message(socket, result)
+
+    {:noreply, %{negative: state.negative, neutral: state.neutral, positive: list}}
+  end
+
+  def get_message(true, message_queue) do
+    hd(message_queue)
+  end
+
+  def get_message(false, _) do
+    "Nothing in queue"
+  end
+
+  def handle_list(false, list) do
+    IO.puts("skipping")
+    list
+  end
+
+  def handle_list(true, list) do
+    List.delete_at(list, 0)
   end
 
   defp timer() do

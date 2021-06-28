@@ -23,6 +23,7 @@ defmodule Server.ServerTCP do
   defp loop_acceptor(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
     pid = spawn_link(__MODULE__, :serve, [client])
+    IO.inspect(client)
     :ok = :gen_tcp.controlling_process(client, pid)
     loop_acceptor(socket)
   end
