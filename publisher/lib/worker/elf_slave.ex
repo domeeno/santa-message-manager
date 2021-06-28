@@ -12,10 +12,10 @@ defmodule Worker.ElfWorker do
     {:ok, %{}}
   end
 
-  def handle_cast({:eval, message, index, worker_count}, state) do
-    [tweet, sentiment_q, _polarity] =  Utils.TweetProcess.eval(message)
+  def handle_cast({:eval, message, index, worker_count}, _state) do
+    [tweet, sentiment_q, polarity] =  Utils.TweetProcess.eval(message)
     IO.puts("worker: " <> Integer.to_string(index) <> ":\t sentiment: " <> Float.to_string(sentiment_q) <> ":\t workers count: " <> Integer.to_string(worker_count))
-    GenServer.cast(Worker.BrokerLink, {:sendb, tweet})
+    GenServer.cast(Worker.BrokerLink, {:sendb, tweet, polarity})
     # Mongo.UploadServer.add_message(%{message: tweet, sentiment: sentiment_q, polarity: polarity})
     {:noreply, %{}}
   end

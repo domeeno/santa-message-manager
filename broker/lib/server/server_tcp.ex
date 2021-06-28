@@ -42,7 +42,10 @@ defmodule Server.ServerTCP do
   defp read_line(socket) do
     try do
       {:ok, data} = :gen_tcp.recv(socket, 0)
-      Logger.info(data)
+      # Logger.info(data)
+      {:ok, json_tweet} = Poison.decode(data)
+      atom = String.to_atom(json_tweet["topic"])
+      GenServer.cast(Broker.MessageQueue, {atom, json_tweet["tweet"]})
     rescue
       _ -> :error
     end

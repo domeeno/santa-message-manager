@@ -14,8 +14,8 @@ defmodule Worker.BrokerLink do
     {:ok, %{socket: state.socket}}
   end
 
-  def handle_cast({:sendb, tweet}, state) do
-    Utils.ServerTCP.send(state.socket, tweet)
+  def handle_cast({:sendb, tweet, polarity}, state) do
+    Utils.ServerTCP.send(state.socket, tweet, polarity)
     {:noreply, %{socket: state.socket}}
   end
 end

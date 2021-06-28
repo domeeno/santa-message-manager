@@ -3,12 +3,14 @@ defmodule Utils.ServerTCP do
     :gen_tcp.connect(host, port, [:binary, active: false])
   end
 
-  def send(socket, data) do
+  def send(socket, data, polarity) do
     size = data
       |> String.length()
       |> Integer.to_string()
       |> String.pad_leading(5, "0")
 
-    :gen_tcp.send(socket, size <> data)
+    packet = %{"topic" => polarity, "tweet" => size <> data}
+
+    :gen_tcp.send(socket, Poison.encode!(packet))
   end
 end
