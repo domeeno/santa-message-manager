@@ -3,9 +3,12 @@ defmodule App.Application do
 
     children = [
       {Task.Supervisor, name: ServerTCP.TaskSupervisor},
-      Supervisor.child_spec({Task, fn -> Server.ServerTCP.start_link(4040) end}, restart: :permanent),
+      Supervisor.child_spec({Task, fn -> Server.ServerTCP.start_link(4040) end}, id: ServerTCP, restart: :permanent),
       %{id: Broker.MessageQueue, start: {Broker.MessageQueue, :start_link, []}},
-      %{id: Server.SubscriberServer, start: {Server.SubscriberServer, :start_link, [8000]}}
+      %{id: SubscriberRegistry, start: {SubscriberRegistry, :start_link, []}},
+
+      {Task.Supervisor, name: SubscriberTCP.TaskSupervisor},
+      Supervisor.child_spec({Task, fn -> Server.SubscriberServer.start_link(8000) end}, id: SubscriberTCP, restart: :permanent),
     ]
 
     opts = [strategy: :one_for_one, name: App.Supervisor]
