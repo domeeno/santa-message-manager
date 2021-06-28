@@ -1,6 +1,6 @@
 defmodule Scaler.AutoScaler do
   use GenServer
-  @seconds 2000
+  @seconds 2 * 1000
 
   def start_link() do
     IO.puts("AutoScaler starting")
